@@ -1,18 +1,13 @@
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { PortfolioDashboardBody } from "@/components/dashboard/PortfolioDashboardBody";
-import { NewsList } from "@/components/stock/NewsList";
-import { getMarketNews } from "@/lib/finnhub";
 
-export default async function Home() {
-  const news = await getMarketNews().catch(() => []);
-
+export default function PortfolioPage() {
   return (
     <DashboardShell
-      title="Overview"
+      title="Portfolio"
       subtitle="Track your stocks, news and performance."
     >
       <PortfolioDashboardBody />
-      <NewsList articles={news} />
     </DashboardShell>
   );
 }

@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f4f3f9;
+  --foreground: #12121a;
+
+  --color-page: #f4f3f9;
+  --color-panel: #ffffff;
+  --color-accent: #6d4aff;
+  --color-accent-hover: #5c39f5;
+  --color-accent-soft: #efeafe;
+  --color-positive: #17a34a;
+  --color-positive-soft: #e2f8ea;
+  --color-negative: #e0384d;
+  --color-negative-soft: #fdeaec;
+  --color-ink: #12121a;
+  --color-muted: #8b8b9a;
+  --color-line: #ececf2;
+}
+
+.dark {
+  --background: #0e0e14;
+  --foreground: #f1f1f4;
+
+  --color-page: #0e0e14;
+  --color-panel: #17171f;
+  --color-accent: #7c5cff;
+  --color-accent-hover: #8d70ff;
+  --color-accent-soft: #241f3d;
+  --color-positive: #34d17c;
+  --color-positive-soft: #123023;
+  --color-negative: #f0596c;
+  --color-negative-soft: #34161c;
+  --color-ink: #f1f1f4;
+  --color-muted: #8f8fa3;
+  --color-line: #26262f;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-page: var(--color-page);
+  --color-panel: var(--color-panel);
+  --color-accent: var(--color-accent);
+  --color-accent-hover: var(--color-accent-hover);
+  --color-accent-soft: var(--color-accent-soft);
+  --color-positive: var(--color-positive);
+  --color-positive-soft: var(--color-positive-soft);
+  --color-negative: var(--color-negative);
+  --color-negative-soft: var(--color-negative-soft);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-line: var(--color-line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
