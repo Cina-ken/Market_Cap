@@ -2,6 +2,8 @@
 
 A stock market dashboard with live prices, historical charts, company news, and a subscription-gated watchlist. Built with Next.js App Router, Supabase, and Stripe.
 
+[![CI](https://github.com/Cina-ken/Market_Cap/actions/workflows/ci.yml/badge.svg)](https://github.com/Cina-ken/Market_Cap/actions/workflows/ci.yml)
+
 **Live app:** [marketcap-jade.vercel.app](https://marketcap-jade.vercel.app)
 
 ![Overview dashboard](docs/screenshots/overview.png)
