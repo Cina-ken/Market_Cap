@@ -44,5 +44,5 @@ next-env.d.ts
 
 .vercel
 
-# Claude Code local session/tooling files (machine-specific, not shared)
+# local editor/tooling config (machine-specific, not shared)
 .claude/
