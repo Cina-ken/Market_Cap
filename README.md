@@ -10,12 +10,12 @@ A stock market dashboard with live prices, historical charts, company news, and 
 
 ## Features
 
-- **Live quotes & search** — real-time price, change, and company search backed by [Finnhub](https://finnhub.io).
-- **Historical price charts** — 1W / 1M / 3M / 1Y ranges, backed by [Twelve Data](https://twelvedata.com) (see [why two providers](#why-two-market-data-providers)).
-- **Company profiles, fundamentals & news** — market cap, P/E, 52-week range, and recent headlines per ticker.
-- **Auth + per-user watchlist** — email/password auth via Supabase, with Postgres Row Level Security so each user can only ever see their own saved tickers.
-- **Stripe subscriptions (test mode)** — the watchlist is a paid feature; checkout, billing portal, and webhook-driven subscription sync are all wired up end to end.
-- **Light/dark theme, responsive layout** — usable dashboard down to mobile widths.
+- **Live quotes & search**:  real-time price, change, and company search backed by [Finnhub](https://finnhub.io).
+- **Historical price charts**: 1W / 1M / 3M / 1Y ranges, backed by [Twelve Data](https://twelvedata.com) (see [why two providers](#why-two-market-data-providers)).
+- **Company profiles, fundamentals & news**: market cap, P/E, 52-week range, and recent headlines per ticker.
+- **Auth + per-user watchlist**: email/password auth via Supabase, with Postgres Row Level Security so each user can only ever see their own saved tickers.
+- **Stripe subscriptions (test mode)**: the watchlist is a paid feature; checkout, billing portal, and webhook-driven subscription sync are all wired up end to end.
+- **Light/dark theme, responsive layout**:  usable dashboard down to mobile widths.
 
 | Stock detail | Pricing |
 | --- | --- |
@@ -46,11 +46,11 @@ Auth state is refreshed on every request via Next.js middleware ([`src/proxy.ts`
 
 The webhook handler ([`src/app/api/stripe/webhook/route.ts`](src/app/api/stripe/webhook/route.ts)) was verified locally with `stripe listen --forward-to localhost:3000/api/stripe/webhook` and `stripe trigger checkout.session.completed` — signature verification, JSON parsing, and event routing all confirmed working (200s, no server errors) for `checkout.session.completed`, `payment_intent.succeeded`, `payment_intent.created`, and `charge.succeeded`. Note that `stripe trigger`'s generic fixture doesn't set `client_reference_id`/`metadata`, so it exercises the endpoint but not the `syncSubscriptionToSupabase` write path, which only runs for a session created through the app's own `createCheckoutSession()` flow — end-to-end verification of that path means completing a real test-mode checkout through the UI.
 
-`src/proxy.ts` (not `middleware.ts`) is intentional, not a typo: as of Next.js 16, the `middleware.ts` file convention is deprecated in favor of `proxy.ts` — Next.js 16.2.10 (this project's version) throws a build error if both exist, and warns on `middleware.ts` alone. See [nextjs.org/docs/messages/middleware-to-proxy](https://nextjs.org/docs/messages/middleware-to-proxy).
+`src/proxy.ts` (not `middleware.ts`) is intentional, not a typo: as of Next.js 16, the `middleware.ts` file convention is deprecated in favor of `proxy.ts`,  Next.js 16.2.10 (this project's version) throws a build error if both exist, and warns on `middleware.ts` alone. See [nextjs.org/docs/messages/middleware-to-proxy](https://nextjs.org/docs/messages/middleware-to-proxy).
 
 ## Why two market data providers
 
-Finnhub's free tier covers live quotes, search, company profiles, fundamentals, and news — but its `/stock/candle` (historical OHLC) endpoint is paid-tier only, and price charts were a core part of the product. Rather than drop charts or pay for a tier the rest of the app didn't need, I added [Twelve Data](https://twelvedata.com) as a second provider used exclusively for the `1W/1M/3M/1Y` time series in [`src/lib/twelvedata.ts`](src/lib/twelvedata.ts). That introduced its own constraint: Twelve Data's free tier rate-limits aggressively, and the dashboard's "portfolio value over time" chart needs to sum series across up to 8 tickers at once. `getAggregateHistory` handles this by capping the fan-out at 8 parallel requests, tolerating individual failures (`.catch(() => [])`) instead of failing the whole chart, and reducing to the intersection of dates every series actually returned rather than assuming uniform coverage. It's a small function, but getting it wrong either silently drops tickers from the total or throws away the whole chart when one upstream call times out — both of which I hit while building it.
+Finnhub's free tier covers live quotes, search, company profiles, fundamentals, and news,  but its `/stock/candle` (historical OHLC) endpoint is paid-tier only, and price charts were a core part of the product. Rather than drop charts or pay for a tier the rest of the app didn't need, I added [Twelve Data](https://twelvedata.com) as a second provider used exclusively for the `1W/1M/3M/1Y` time series in [`src/lib/twelvedata.ts`](src/lib/twelvedata.ts). That introduced its own constraint: Twelve Data's free tier rate-limits aggressively, and the dashboard's "portfolio value over time" chart needs to sum series across up to 8 tickers at once. `getAggregateHistory` handles this by capping the fan-out at 8 parallel requests, tolerating individual failures (`.catch(() => [])`) instead of failing the whole chart, and reducing to the intersection of dates every series actually returned rather than assuming uniform coverage. It's a small function, but getting it wrong either silently drops tickers from the total or throws away the whole chart when one upstream call times out,  both of which I hit while building it.
 
 ## Tech stack
 
